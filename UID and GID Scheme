@@ -1,0 +1,96 @@
+The goal is to determine th euser ID and Group Id scheme of the server host so that when I'm setting an held app server for authentication, 
+the UID and GID does not collide. 
+
+/ $ ssh cloud_user@3.85.134.246
+
+Host '3.85.134.246' is not in the trusted hosts file.
+(ssh-ed25519 fingerprint sha1!! c1:ee:5d:84:66:46:e5:3f:9e:65:df:a8:6b:58:f6:69:24:a8:d7:97)
+Do you want to continue connecting? (y/n) y
+cloud_user@3.85.134.246's password:
+[cloud_user@ip-10-0-1-10 ~]$ pwd
+/home/cloud_user
+[cloud_user@ip-10-0-1-10 ~]$ cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+operator:x:11:0:operator:/root:/sbin/nologin
+games:x:12:100:games:/usr/games:/sbin/nologin
+ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
+nobody:x:99:99:Nobody:/:/sbin/nologin
+systemd-bus-proxy:x:999:998:systemd Bus Proxy:/:/sbin/nologin
+systemd-network:x:192:192:systemd Network Management:/:/sbin/nologin
+dbus:x:81:81:System message bus:/:/sbin/nologin
+polkitd:x:998:997:User for polkitd:/:/sbin/nologin
+tss:x:59:59:Account used by the trousers package to sandbox the tcsd daemon:/dev/null:/sbin/nologin
+sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin
+postfix:x:89:89::/var/spool/postfix:/sbin/nologin
+chrony:x:997:995::/var/lib/chrony:/sbin/nologin
+cloud_user:x:1000:1000:Cloud Assessment User:/home/cloud_user:/bin/bash
+centos:x:1001:1001:Cloud User:/home/centos:/bin/bash
+jbillings:x:2500:2500::/home/jbillings:/bin/bash
+jhans:x:2501:2501::/home/jhans:/bin/bash
+zcrowter:x:2502:2502::/home/zcrowter:/bin/bash
+aaturner:x:2503:2503::/home/aaturner:/bin/bash
+mnorris:x:2504:2504::/home/mnorris:/bin/bash
+tsmith:x:2506:2506::/home/tsmith:/bin/bash
+ftarkov:x:2507:2507::/home/ftarkov:/bin/bash
+[cloud_user@ip-10-0-1-10 ~]$ cat /etc/group
+root:x:0:
+bin:x:1:
+daemon:x:2:
+sys:x:3:
+adm:x:4:centos
+tty:x:5:
+disk:x:6:
+lp:x:7:
+mem:x:8:
+kmem:x:9:
+wheel:x:10:cloud_user,centos
+cdrom:x:11:
+mail:x:12:postfix
+man:x:15:
+dialout:x:18:
+floppy:x:19:
+games:x:20:
+tape:x:30:
+video:x:39:
+ftp:x:50:
+lock:x:54:
+audio:x:63:
+nobody:x:99:
+users:x:100:
+utmp:x:22:
+utempter:x:35:
+input:x:999:
+systemd-journal:x:190:centos
+systemd-bus-proxy:x:998:
+systemd-network:x:192:
+dbus:x:81:
+polkitd:x:997:
+ssh_keys:x:996:
+dip:x:40:
+tss:x:59:
+sshd:x:74:
+postdrop:x:90:
+postfix:x:89:
+chrony:x:995:
+cloud_user:x:1000:cloud_user
+cgred:x:994:
+centos:x:1001:
+jbillings:x:2500:
+jhans:x:2501:
+zcrowter:x:2502:
+aaturner:x:2503:
+mnorris:x:2504:
+tsmith:x:2506:
+ftarkov:x:2507:
+sales:x:3000:
+operations:x:3001:
+credit:x:3002:
+finance:x:3003:
