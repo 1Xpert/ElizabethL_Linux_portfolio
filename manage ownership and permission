@@ -1,0 +1,107 @@
+mIn this project, I manage Linux file and directory ownership and permissions. 
+Some employees are leaving while there are some new employees to replace them. So
+I got rid of the old users and grant access to th enew ones.
+
+/ $ ssh cloud_user@54.90.12.64
+
+Host '54.90.12.64' is not in the trusted hosts file.
+(ssh-ed25519 fingerprint sha1!! 16:05:b1:15:a4:29:28:b8:b6:44:c8:ee:0b:83:d8:36:0b:6c:52:86)
+Do you want to continue connecting? (y/n) y
+cloud_user@54.90.12.64's password:
+[cloud_user@ip-10-0-1-63 ~]$ pwd
+/home/cloud_user
+[cloud_user@ip-10-0-1-63 ~]$ ll /home/
+total 0
+drwx------. 2 bill       bill       263 Nov 28 11:47 bill
+drwx------. 3 centos     centos      95 Feb  4  2017 centos
+drwx------. 4 cloud_user cloud_user 127 Aug 26 18:35 cloud_user
+drwx------. 2 jason      jason      273 Nov 28 11:46 jason
+drwx------. 2 juan       juan       263 Nov 28 11:48 juan
+drwx------. 2 sally      sally       62 Nov 28 11:45 sally
+drwx------. 2 susan      susan      273 Nov 28 11:47 susan
+
+# Lock their access to files.
+
+[cloud_user@ip-10-0-1-63 ~]$ for i in bill susan juan; do sudo passwd -l $i; done
+[sudo] password for cloud_user:
+Locking password for user bill.
+passwd: Success
+Locking password for user susan.
+passwd: Success
+Locking password for user juan.
+passwd: Success
+[cloud_user@ip-10-0-1-63 ~]$ w
+ 12:02:22 up 20 min,  1 user,  load average: 0.00, 0.02, 0.08
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+cloud_us pts/0    ec2-54-198-8-92. 11:59    6.00s  0.02s  0.01s w
+
+
+# For each old users, replace with new and modify the permission of the directory
+so that both new users and the manager can have access.
+
+[cloud_user@ip-10-0-1-63 ~]$ for i in nancy greg jeremy; do sudo useradd -m $i; done
+[cloud_user@ip-10-0-1-63 ~]$ ll /home/
+total 0
+drwx------. 2 bill       bill       263 Nov 28 11:47 bill
+drwx------. 3 centos     centos      95 Feb  4  2017 centos
+drwx------. 4 cloud_user cloud_user 127 Aug 26 18:35 cloud_user
+drwx------. 2 greg       greg        62 Nov 28 12:05 greg
+drwx------. 2 jason      jason      273 Nov 28 11:46 jason
+drwx------. 2 jeremy     jeremy      62 Nov 28 12:05 jeremy
+drwx------. 2 juan       juan       263 Nov 28 11:48 juan
+drwx------. 2 nancy      nancy       62 Nov 28 12:05 nancy
+drwx------. 2 sally      sally       62 Nov 28 11:45 sally
+drwx------. 2 susan      susan      273 Nov 28 11:47 susan
+[cloud_user@ip-10-0-1-63 ~]$ id jason
+uid=1002(jason) gid=1002(jason) groups=1002(jason)
+[cloud_user@ip-10-0-1-63 ~]$ sudo userdel bill
+[cloud_user@ip-10-0-1-63 ~]$ ll /home/
+total 0
+drwx------. 2       1004       1004 263 Nov 28 11:47 bill
+drwx------. 3 centos     centos      95 Feb  4  2017 centos
+drwx------. 4 cloud_user cloud_user 127 Aug 26 18:35 cloud_user
+drwx------. 2 greg       greg        62 Nov 28 12:05 greg
+drwx------. 2 jason      jason      273 Nov 28 11:46 jason
+drwx------. 2 jeremy     jeremy      62 Nov 28 12:05 jeremy
+drwx------. 2 juan       juan       263 Nov 28 11:48 juan
+drwx------. 2 nancy      nancy       62 Nov 28 12:05 nancy
+drwx------. 2 sally      sally       62 Nov 28 11:45 sally
+drwx------. 2 susan      susan      273 Nov 28 11:47 susan
+[cloud_user@ip-10-0-1-63 ~]$ sudo chown -R nancy:jason /home/bill
+[cloud_user@ip-10-0-1-63 ~]$ ll /home/
+total 0
+drwx------. 2 nancy      jason      263 Nov 28 11:47 bill
+drwx------. 3 centos     centos      95 Feb  4  2017 centos
+drwx------. 4 cloud_user cloud_user 127 Aug 26 18:35 cloud_user
+drwx------. 2 greg       greg        62 Nov 28 12:05 greg
+drwx------. 2 jason      jason      273 Nov 28 11:46 jason
+drwx------. 2 jeremy     jeremy      62 Nov 28 12:05 jeremy
+drwx------. 2 juan       juan       263 Nov 28 11:48 juan
+drwx------. 2 nancy      nancy       62 Nov 28 12:05 nancy
+drwx------. 2 sally      sally       62 Nov 28 11:45 sally
+drwx------. 2 susan      susan      273 Nov 28 11:47 susan
+[cloud_user@ip-10-0-1-63 ~]$ sudo chmod g+rx /home/bill
+[cloud_user@ip-10-0-1-63 ~]$ ll /home/
+total 0
+drwxr-x---. 2 nancy      jason      263 Nov 28 11:47 bill
+drwx------. 3 centos     centos      95 Feb  4  2017 centos
+drwx------. 4 cloud_user cloud_user 127 Aug 26 18:35 cloud_user
+drwx------. 2 greg       greg        62 Nov 28 12:05 greg
+drwx------. 2 jason      jason      273 Nov 28 11:46 jason
+drwx------. 2 jeremy     jeremy      62 Nov 28 12:05 jeremy
+drwx------. 2 juan       juan       263 Nov 28 11:48 juan
+drwx------. 2 nancy      nancy       62 Nov 28 12:05 nancy
+drwx------. 2 sally      sally       62 Nov 28 11:45 sally
+drwx------. 2 susan      susan      273 Nov 28 11:47 susan
+[cloud_user@ip-10-0-1-63 ~]$ sudo ls -l /home/bill
+total 120
+-rw-rw-r--. 1 nancy jason 10240 Nov 28 11:47 bill_files_1
+-rw-rw-r--. 1 nancy jason 10240 Nov 28 11:47 bill_files_10
+-rw-rw-r--. 1 nancy jason 10240 Nov 28 11:47 bill_files_2
+-rw-rw-r--. 1 nancy jason 10240 Nov 28 11:47 bill_files_3
+-rw-rw-r--. 1 nancy jason 10240 Nov 28 11:47 bill_files_4
+-rw-rw-r--. 1 nancy jason 10240 Nov 28 11:47 bill_files_5
+-rw-rw-r--. 1 nancy jason 10240 Nov 28 11:47 bill_files_6
+-rw-rw-r--. 1 nancy jason 10240 Nov 28 11:47 bill_files_7
+-rw-rw-r--. 1 nancy jason 10240 Nov 28 11:47 bill_files_8
+-rw-rw-r--. 1 nancy jason 10240 Nov 28 11:47 bill_files_9
