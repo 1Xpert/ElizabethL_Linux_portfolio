@@ -1,0 +1,85 @@
+-V    Version
+/ $ ssh cloud_user@54.173.227.101
+
+Host '54.173.227.101' is not in the trusted hosts file.
+(ssh-ed25519 fingerprint sha1!! 19:0f:41:a6:60:84:9a:21:0e:97:78:e3:76:79:73:00:8a:f0:88:6d)
+Do you want to continue connecting? (y/n) y
+cloud_user@54.173.227.101's password:
+[cloud_user@ip-10-0-1-10 ~]$ pwd
+/home/cloud_user
+
+#Create the Required Users
+
+[cloud_user@ip-10-0-1-10 ~]$ for i in jen william matt sam anne danny kate bruce; do sudo useradd -m $i; done
+[sudo] password for cloud_user:
+[cloud_user@ip-10-0-1-10 ~]$ tail /etc/passwd
+cloud_user:x:1000:1000:Cloud Assessment User:/home/cloud_user:/bin/bash
+centos:x:1001:1001:Cloud User:/home/centos:/bin/bash
+jen:x:1002:1002::/home/jen:/bin/bash
+william:x:1003:1003::/home/william:/bin/bash
+matt:x:1004:1004::/home/matt:/bin/bash
+sam:x:1005:1005::/home/sam:/bin/bash
+anne:x:1006:1006::/home/anne:/bin/bash
+danny:x:1007:1007::/home/danny:/bin/bash
+kate:x:1008:1008::/home/kate:/bin/bash
+bruce:x:1009:1009::/home/bruce:/bin/bash
+
+#Create the Required Groups
+
+[cloud_user@ip-10-0-1-10 ~]$ sudo groupadd management
+[cloud_user@ip-10-0-1-10 ~]$ sudo groupadd sales
+[cloud_user@ip-10-0-1-10 ~]$ sudo groupadd operations
+[cloud_user@ip-10-0-1-10 ~]$ tail /etc/group
+william:x:1003:
+matt:x:1004:
+sam:x:1005:
+anne:x:1006:
+danny:x:1007:
+kate:x:1008:
+bruce:x:1009:
+management:x:1010:
+sales:x:1011:
+operations:x:1012:
+
+# add users to the appropriate groups
+
+[cloud_user@ip-10-0-1-10 ~]$ sudo usermod -a -G management jen
+[cloud_user@ip-10-0-1-10 ~]$ sudo usermod -a -G sales jen
+[cloud_user@ip-10-0-1-10 ~]$ sudo usermod -a -G operations jen
+[cloud_user@ip-10-0-1-10 ~]$ groups jen
+jen : jen management sales operations
+[cloud_user@ip-10-0-1-10 ~]$ for i in management sales operations; sudo usermod -a -G $i william; done
+-bash: syntax error near unexpected token `sudo'
+[cloud_user@ip-10-0-1-10 ~]$ for i in management sales operations
+> ; sudo usermod -a -G $i william; done
+-bash: syntax error near unexpected token `;'
+[cloud_user@ip-10-0-1-10 ~]$ groups william
+william : william
+[cloud_user@ip-10-0-1-10 ~]$ for i in management sales operations; do sudo usermod -a -G $i william; done
+[sudo] password for cloud_user:
+Sorry, try again.
+[sudo] password for cloud_user:
+[cloud_user@ip-10-0-1-10 ~]$ for i in management sales operations; do sudo usermod -a -G $i william; done
+[cloud_user@ip-10-0-1-10 ~]$ groups william
+william : william management sales operations
+[cloud_user@ip-10-0-1-10 ~]$ for name in matt sam anne danny; do sudo usermod -a -G sales $name; done
+[cloud_user@ip-10-0-1-10 ~]$ groups matt
+matt : matt sales
+[cloud_user@ip-10-0-1-10 ~]$ groups sam
+sam : sam sales
+[cloud_user@ip-10-0-1-10 ~]$ group anne
+-bash: group: command not found
+[cloud_user@ip-10-0-1-10 ~]$ groups anne
+anne : anne sales
+[cloud_user@ip-10-0-1-10 ~]$ groups danny
+danny : danny sales
+[cloud_user@ip-10-0-1-10 ~]$ sudo usermod -a -G operations kate
+[cloud_user@ip-10-0-1-10 ~]$ sudo usermod -a -G operations bruce
+[cloud_user@ip-10-0-1-10 ~]$ id jen
+uid=1002(jen) gid=1002(jen) groups=1002(jen),1010(management),1011(sales),1012(operations)
+[cloud_user@ip-10-0-1-10 ~]$ id william
+uid=1003(william) gid=1003(william) groups=1003(william),1010(management),1011(sales),1012(operations)
+[cloud_user@ip-10-0-1-10 ~]$ tail -n3 /etc/group
+management:x:1010:jen,william
+sales:x:1011:jen,william,matt,sam,anne,danny
+operations:x:1012:jen,william,kate,bruce
