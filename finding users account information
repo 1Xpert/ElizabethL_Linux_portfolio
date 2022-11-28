@@ -1,0 +1,15 @@
+/ $ ssh cloud_user@54.161.55.125
+
+Host '54.161.55.125' is not in the trusted hosts file.
+(ssh-ed25519 fingerprint sha1!! c4:97:b9:8f:f5:9e:b2:46:51:9b:57:75:8c:e1:85:7f:23:09:63:0a)
+Do you want to continue connecting? (y/n) y
+cloud_user@54.161.55.125's password:
+[cloud_user@ip-10-0-1-10 ~]$ pwd
+/home/cloud_user
+[cloud_user@ip-10-0-1-10 ~]$ id sysuser
+uid=1002(sysuser) gid=1002(sysuser) groups=1002(sysuser),1003(finance),1004(sales)
+[cloud_user@ip-10-0-1-10 ~]$ getend passwd sysuser
+-bash: getend: command not found
+[cloud_user@ip-10-0-1-10 ~]$ getent passwd sysuser
+sysuser:x:1002:1002::/home/sysuser:/bin/bash
+[cloud_user@ip-10-0-1-10 ~]$
